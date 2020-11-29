@@ -1,0 +1,13 @@
+setuptools>=41.0.0
+numpy==1.18.0
+selenium
+urllib3==1.24
+requests==2.21.0
+scikit-build
+cvlib
+opencv-python
+colorama
+tensorflow
+faker
+fake-useragent
+pyderman
