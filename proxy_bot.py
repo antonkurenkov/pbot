@@ -306,7 +306,7 @@ if __name__ == '__main__':
                     break
                 except Exception as e:
                     print(f'user init failed with {get_exceptions_args()}')
-                    # raise e
+                    raise e
 
             redirected = u.get_redirected_url()
             time_string = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
@@ -321,6 +321,7 @@ if __name__ == '__main__':
             print(get_exceptions_args())
             u.driver.quit()
             success = False
+            raise e
         print('---')
         # subprocess.check_call(['killall', 'chrome'])
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
