@@ -11,3 +11,4 @@ tensorflow
 faker
 fake-useragent
 pyderman
+proxybroker
