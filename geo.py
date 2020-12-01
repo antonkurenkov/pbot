@@ -39,7 +39,7 @@ def main():
                 p = Producer()
                 p.create_user()
                 proxy = i.split('//')[-1]
-                p.create_driver(proxy, headless=False)
+                p.create_driver(proxy, headless=True)
                 try:
                     p.driver.get('https://api.ipify.org?format=json')
                     time.sleep(1)
