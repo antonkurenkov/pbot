@@ -145,11 +145,11 @@ class Producer:
             self.driver = webdriver.Opera(options=options, executable_path=path)
 
     def produce_data(self):
-        # with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
-        with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
+        with open('../userdata/banknames.txt') as file:
+        # with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
             self.bankname = random.choice(file.read().split('\n'))
-        # with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
-        with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
+        with open('../userdata/purposes.txt') as file:
+        # with open('/Users/antonkurenkov/Proj/pbot/userdata/purposes.txt') as file:
             self.purpose = random.choice(file.read().split('\n'))
         obligatory_block = {
             'Name': f'{self.lastname} {self.firstname} {self.middlename}',

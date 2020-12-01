@@ -276,10 +276,7 @@ class User(Solver, Producer):
             self.driver.get(url)
         if self.virtual or self.driver.title == 'Payment QR-code generator':
             if not self.virtual:
-                body = WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-                print(body.text)
-                # if 'ERR_' in body.text:
-                #     raise Exception(f'bad proxy')
+                WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
             self.do_job()
             success = True
         else:
