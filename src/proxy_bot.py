@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from src.solver import Solver
 from src.cradle import Producer
 from src.geo import main as get_proxy_from_geo
+from exceptions import get_exceptions_args
 
 import random
 import time
@@ -245,19 +246,19 @@ class User(Solver, Producer):
                         if self.happened(probability_coeff=20):
                             self.scroll(forward=False)
 
-                        if self.happened(probability_coeff=20):  # 25%
-                            if not self.virtual:
-                                time.sleep(random.randint(1, 6))
+                    if self.happened(probability_coeff=20):  # 25%
+                        if not self.virtual:
+                            time.sleep(random.randint(1, 6))
 
-                        if self.happened(probability_coeff=500):  # 90%
-                            self.solve_captcha(on_login_page=True)
+                    if self.happened(probability_coeff=500):  # 90%
+                        self.solve_captcha(on_login_page=True)
 
-                            if not redirected(probability_coeff=5):  # 3.5%
+                        if not redirected(probability_coeff=5):  # 3.5%
 
-                                if self.happened(probability_coeff=20):
-                                    self.scroll(forward=False)
+                            if self.happened(probability_coeff=20):
+                                self.scroll(forward=False)
 
-                                self.submit_form()
+                            self.submit_form()
 
                             if not redirected(probability_coeff=10):  # 6%
 
@@ -275,12 +276,11 @@ class User(Solver, Producer):
             self.driver.get(url)
         if self.virtual or self.driver.title == 'Payment QR-code generator':
             if not self.virtual:
-                WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-            if self.happened(probability_coeff=1000):
-                self.do_job()
-            else:
-                if not self.virtual:
-                    time.sleep(random.randint(1, 20))
+                body = WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
+                print(body.text)
+                # if 'ERR_' in body.text:
+                #     raise Exception(f'bad proxy')
+            self.do_job()
             success = True
         else:
             print(self.driver.title)
@@ -307,23 +307,26 @@ if __name__ == '__main__':
                     u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
                     break
                 except Exception as e:
-                    print(f'user init failed with {str(e).lower()}')
+                    print(f'user init failed with {get_exceptions_args()}')
                     # raise e
 
             redirected = u.get_redirected_url()
-            print(f'VISIT {redirected} over {u.proxy}')
+            time_string = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+            print(f'[{time_string}] VISIT {redirected} over {u.proxy}')
             success = u.be_human(redirected)
             if success:
+                if not u.virtual:
+                    time.sleep(random.randint(1, 10))
                 used_queue.append(u.proxy)
-        except Exception as e:
-            print(e)
             u.driver.quit()
-        if not virtual:
-            time.sleep(random.randint(10, 30))
+        except Exception as e:
+            print(get_exceptions_args())
+            u.driver.quit()
+            success = False
         print('---')
         # subprocess.check_call(['killall', 'chrome'])
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
-        if not u.virtual:
+        if not u.virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)

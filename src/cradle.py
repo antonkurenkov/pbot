@@ -74,14 +74,14 @@ class Producer:
     def create_driver(self, proxy=None, headless=False):
         if self.virtual:
             return
-        if not isinstance(proxy, str):
+        if proxy and not isinstance(proxy, str):
             with open('../tested_proxies.txt') as file:
                 lines = file.read().split()
                 proxy = random.choice(lines).strip()
         choice = random.choice([
-            ['chrome', dr.chrome],
+            # ['chrome', dr.chrome],
             # ['firefox', dr.firefox],
-            # ['opera', dr.opera],
+            ['opera', dr.opera],
             # dr.phantomjs
         ])
         path = dr.install(browser=choice[1], file_directory='./lib/', verbose=True, chmod=True, overwrite=False,
@@ -92,7 +92,7 @@ class Producer:
             if proxy:
                 webdriver.DesiredCapabilities.CHROME['proxy'] = {
                     "httpProxy": proxy,
-                    # "ftpProxy": proxy,
+                    "ftpProxy": proxy,
                     "sslProxy": proxy,
                     "proxyType": "MANUAL",
                 }
@@ -101,7 +101,7 @@ class Producer:
             if proxy:
                 webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
                     "httpProxy": proxy,
-                    # "ftpProxy": proxy,
+                    "ftpProxy": proxy,
                     "sslProxy": proxy,
                     "proxyType": "MANUAL",
                 }
@@ -110,7 +110,7 @@ class Producer:
             if proxy:
                 webdriver.DesiredCapabilities.OPERA['proxy'] = {
                     "httpProxy": proxy,
-                    # "ftpProxy": proxy,
+                    "ftpProxy": proxy,
                     "sslProxy": proxy,
                     "proxyType": "MANUAL",
                 }
@@ -134,7 +134,7 @@ class Producer:
         options.add_argument('--no-sandbox')
         options.add_argument("--disable-infobars")
         options.add_argument("--disable-extensions")
-        options.add_argument("--disable-setuid-sandbox")
+        # options.add_argument("--disable-setuid-sandbox")
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         if choice[0] == 'chrome':
