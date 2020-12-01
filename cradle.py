@@ -83,7 +83,7 @@ class Producer:
             ['chrome', dr.chrome],
             ['chrome', dr.chrome],
             # ['firefox', dr.firefox],
-            ['opera', dr.opera],
+            # ['opera', dr.opera],
             # dr.phantomjs
         ])
         path = dr.install(browser=choice[1], file_directory='src/lib/', verbose=True, chmod=True, overwrite=False,
