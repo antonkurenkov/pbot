@@ -40,8 +40,8 @@ def main():
                 p = Producer()
                 p.create_user()
                 proxy = i.split('//')[-1]
-                p.create_driver(proxy, headless=True)
                 try:
+                    p.create_driver(proxy, headless=True)
                     p.driver.get('https://api.ipify.org?format=json')
                     time.sleep(1)
                     body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
