@@ -1,4 +1,5 @@
 import random
+import time
 from faker import Faker
 from fake_useragent import UserAgent
 import pyderman as dr
@@ -70,14 +71,17 @@ class Producer:
 
         return self.firstname, self.middlename, self.lastname
 
-    def create_driver(self):
+    def create_driver(self, proxy=None, headless=False):
         if self.virtual:
             return
-
+        if not isinstance(proxy, str):
+            with open('../tested_proxies.txt') as file:
+                lines = file.read().split()
+                proxy = random.choice(lines).strip()
         choice = random.choice([
             ['chrome', dr.chrome],
-            ['firefox', dr.firefox],
-            ['opera', dr.opera],
+            # ['firefox', dr.firefox],
+            # ['opera', dr.opera],
             # dr.phantomjs
         ])
         path = dr.install(browser=choice[1], file_directory='./lib/', verbose=True, chmod=True, overwrite=False,
@@ -85,13 +89,37 @@ class Producer:
 
         if choice[0] == 'chrome':
             options = CO()
+            if proxy:
+                webdriver.DesiredCapabilities.CHROME['proxy'] = {
+                    "httpProxy": proxy,
+                    # "ftpProxy": proxy,
+                    "sslProxy": proxy,
+                    "proxyType": "MANUAL",
+                }
         elif choice[0] == 'firefox':
             options = FO()
+            if proxy:
+                webdriver.DesiredCapabilities.FIREFOX['proxy'] = {
+                    "httpProxy": proxy,
+                    # "ftpProxy": proxy,
+                    "sslProxy": proxy,
+                    "proxyType": "MANUAL",
+                }
         elif choice[0] == 'opera':
             options = OO()
+            if proxy:
+                webdriver.DesiredCapabilities.OPERA['proxy'] = {
+                    "httpProxy": proxy,
+                    # "ftpProxy": proxy,
+                    "sslProxy": proxy,
+                    "proxyType": "MANUAL",
+                }
+            # opera_profile = '/Users/antonkurenkov/Proj/pbot/archive'
+            # opera_profile = '	/Users/antonkurenkov/Library/Application Support/com.operasoftware.Opera'
+            # options.add_argument('user-data-dir=' + opera_profile)
 
         options.add_argument(self.useragent)
-        options.headless = True
+        options.headless = headless
 
         if random.randint(0, 100) >= 30:
             options.add_argument('--start-maximized')
@@ -101,6 +129,7 @@ class Producer:
             options.add_argument("window-size=1024,768")
 
         # options.add_argument('--disable-dev-shm-usage')
+
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
         options.add_argument("--disable-infobars")
@@ -116,11 +145,11 @@ class Producer:
             self.driver = webdriver.Opera(options=options, executable_path=path)
 
     def produce_data(self):
-        with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
-        # with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
+        # with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
+        with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
             self.bankname = random.choice(file.read().split('\n'))
-        with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
-        # with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
+        # with open('/home/antonkurenkov/pbot/userdata/banknames.txt') as file:
+        with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
             self.purpose = random.choice(file.read().split('\n'))
         obligatory_block = {
             'Name': f'{self.lastname} {self.firstname} {self.middlename}',
@@ -192,8 +221,9 @@ class Producer:
 if __name__ == '__main__':
     p = Producer()
     p.create_user()
-    p.create_driver()
+    p.create_driver(proxy=True)
     # required_block, optional_block = p.produce_data()
-    p.driver.get('http://www.yandex.ru')
+    p.driver.get('https://api.ipify.org?format=json')
+    time.sleep(10)
     print(p.driver.title)
     p.driver.quit()

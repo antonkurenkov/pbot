@@ -4,22 +4,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from src.solver import Solver
 from src.cradle import Producer
+from src.geo import main as get_proxy_from_geo
 
 import random
 import time
+import subprocess
 
 
 class User(Solver, Producer):
 
-    def __init__(self, url, local, virtual=False):
+    def __init__(self, url, local, virtual=False, proxy=None):
+        super().__init__()
         self.virtual = virtual
-        self.proxy = None
+        self.proxy = proxy
         if not self.virtual:
 
             self.create_user()
-            self.create_driver()
+            self.create_driver(proxy=proxy)
             self.required_block, self.optional_block = self.produce_data()
-            super().__init__()
             self.done = False
             self.speed = 1 + (random.randint(-7, 5) / 10)
 
@@ -281,8 +283,10 @@ class User(Solver, Producer):
                     time.sleep(random.randint(1, 20))
             success = True
         else:
+            print(self.driver.title)
             success = False
         return success
+
 
 if __name__ == '__main__':
 
@@ -290,7 +294,7 @@ if __name__ == '__main__':
     # url_to_visit = 'http://localhost:5000/'
     # url_to_visit = 'http://aqr-coder.herokuapp.com'
     users_local = False
-    virtual = True
+    virtual = False
     bot_number = 76
 
     used_queue = []
@@ -299,7 +303,8 @@ if __name__ == '__main__':
         try:
             while True:
                 try:
-                    u = User(url_to_visit, local=users_local, virtual=virtual)
+                    proxy = get_proxy_from_geo()
+                    u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
                     break
                 except Exception as e:
                     print(f'user init failed with {str(e).lower()}')
@@ -308,19 +313,20 @@ if __name__ == '__main__':
             redirected = u.get_redirected_url()
             print(f'VISIT {redirected} over {u.proxy}')
             success = u.be_human(redirected)
-            # success = u.do_job()  # to just test scenario
             if success:
                 used_queue.append(u.proxy)
         except Exception as e:
             print(e)
-            # raise e
+            u.driver.quit()
         if not virtual:
             time.sleep(random.randint(10, 30))
-            u.driver.quit()
         print('---')
-        import subprocess
+        # subprocess.check_call(['killall', 'chrome'])
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
         if not u.virtual:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)
+
+
+#  https://aviso.bz/?r=bohdanknyaz
