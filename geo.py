@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from cradle import Producer
 import time
+import os
 
 """Find 10 working HTTP(S) proxies and save them to a file."""
 
@@ -33,7 +34,7 @@ def main():
             loop = asyncio.get_event_loop()
             loop.run_until_complete(tasks)
 
-            with open('proxies.txt') as file:
+            with open(os.path.join(os.getcwd(), 'proxies.txt')) as file:
                 pool = file.read().split()
             for i in pool:
                 p = Producer()
@@ -47,7 +48,7 @@ def main():
                     if '"ip"' in body.text:
                         p.driver.get('https://www.payqrcode.ru')
                         if p.driver.title == 'Payment QR-code generator':
-                            with open('tested_proxies.txt', 'a+') as file:
+                            with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+') as file:
                                 file.write(proxy + '\n')
                             # p.driver.quit()
                             return p.driver, proxy
