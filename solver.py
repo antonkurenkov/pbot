@@ -150,6 +150,10 @@ class Solver(CNN):
             return
         if on_login_page:
             self.driver.execute_script("window.scrollBy(0,2000)")
+        body = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, '//body')))
+        print(body.get_attribute('innerHTML'))
         obj = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[@class="prompt-text"]'))) \
