@@ -12,7 +12,7 @@ from exceptions import get_exceptions_args
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, ElementClickInterceptedException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, ElementClickInterceptedException, ElementNotInteractableException
 
 
 class CNN:
@@ -166,9 +166,13 @@ class Solver(CNN):
 
     def solve_hcaptcha(self, on_login_page=True):
         print('[SOLVER] SOLVING HCAPTCHA...')
-        hcaptcha = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, '//div[@class="h-captcha"]')))
-        hcaptcha.click()
+        try:
+            hcaptcha = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located((By.XPATH, '//div[@class="h-captcha"]')))
+            hcaptcha.click()
+        except ElementNotInteractableException:
+            print('[SOLVER] NOT INTERACTABLE CAPTCHA FRAME')
+            return
         while True:
             # self.presence_of_challenge = True
             # self.driver.switch_to.default_content()
