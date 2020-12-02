@@ -212,6 +212,20 @@ class User(Solver, Producer):
                 break
 
     def do_job(self):
+        """
+        # 2 = 2%
+        # 5 = 3.5%
+        # 10 = 6%
+        # 20 = 10%
+        # 30 = 16%
+        # 50 = 25%
+        # 100 = 50%
+        # 200 = 75%
+        # 250 = 80%
+        # 500 = 90%
+        # 1000 = 95%
+        # 10000 = 99%
+        """
         print('do_job on website')
 
         def redirected(probability_coeff=250):
@@ -222,55 +236,55 @@ class User(Solver, Producer):
                     self.do_random_stuff()
                 return True
 
-        # if self.happened(probability_coeff=50):  # 25%
-        #     self.scroll()
-        # if self.happened(probability_coeff=20):  # 25%
-        #     if not self.virtual:
-        #         time.sleep(random.randint(1, 6))
-        #
-        # if not redirected(probability_coeff=20):  # 10%
-        #
-        #     if self.happened(probability_coeff=500):  # 90%
-        #         self.find_required_fields_for_input()
-        #         self.scroll(px=random.randint(100, 200), scrollback=False)
-        #
-        #         if self.happened(probability_coeff=20):  # 25%
-        #             if not self.virtual:
-        #                 time.sleep(random.randint(1, 6))
-        #
-        #         if not redirected(probability_coeff=1):  # 2%
-        #
-        #             if self.happened(probability_coeff=100):  # 50%
-        #                 self.find_optional_fields_for_input()
-        #
-        #                 if self.happened(probability_coeff=20):
-        #                     self.scroll(forward=False)
-        #
-        #             if self.happened(probability_coeff=20):  # 25%
-        #                 if not self.virtual:
-        #                     time.sleep(random.randint(1, 6))
-        #
-        #             if self.happened(probability_coeff=500):  # 90%
-        self.scroll(forward=True, scrollback=False, px=2000)
-        self.solve_captcha(on_login_page=True)
+        if self.happened(probability_coeff=50):  # 25%
+            self.scroll()
+        if self.happened(probability_coeff=20):  # 25%
+            if not self.virtual:
+                time.sleep(random.randint(1, 6))
 
-        if not redirected(probability_coeff=5):  # 3.5%
+        if not redirected(probability_coeff=30):  # 16%
 
-            if self.happened(probability_coeff=20):
-                self.scroll(forward=False)
+            if self.happened(probability_coeff=500):  # 90%
+                self.find_required_fields_for_input()
+                self.scroll(px=random.randint(100, 200), scrollback=False)
 
-            self.submit_form()
+                if self.happened(probability_coeff=50):  # 25%
+                    if not self.virtual:
+                        time.sleep(random.randint(1, 6))
 
-            if not redirected(probability_coeff=10):  # 6%
+                if not redirected(probability_coeff=10):  # 6%
 
-                if self.happened(probability_coeff=20):  # 10%
-                    self.click_back()
+                    if self.happened(probability_coeff=100):  # 50%
+                        self.find_optional_fields_for_input()
+
+                        if self.happened(probability_coeff=50):
+                            self.scroll(forward=False, scrollback=True)
 
                     if self.happened(probability_coeff=20):  # 25%
                         if not self.virtual:
                             time.sleep(random.randint(1, 6))
 
-                    redirected(probability_coeff=10)  # 6%
+                    self.solve_captcha(on_login_page=True)
+
+                    if not redirected(probability_coeff=10):  # 6%
+
+                        if self.happened(probability_coeff=20):
+                            self.scroll(forward=False)
+
+                    self.submit_form()
+                    if not self.virtual:
+                        time.sleep(random.randint(5, 15))
+
+                    if not redirected(probability_coeff=50):  # 25%
+
+                        if self.happened(probability_coeff=20):  # 25%
+                            self.click_back()
+
+                            if self.happened(probability_coeff=20):  # 25%
+                                if not self.virtual:
+                                    time.sleep(random.randint(1, 6))
+
+                            redirected(probability_coeff=10)  # 6%
 
     def be_human(self, url: str):
         if not self.virtual:
@@ -311,14 +325,13 @@ if __name__ == '__main__':
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy}')
                 success = u.be_human(redirected)
+                if not virtual:
+                    time.sleep(random.randint(1, 10))
+                u.driver.quit()
             except Exception as e:
                 print(f'user walk failed with {e} on {get_exceptions_args()}')
                 raise e
-            # if success:
-            #     if not virtual:
-            #         time.sleep(random.randint(1, 10))
-            #     used_queue.append(u.proxy)
-            # u.driver.quit()
+
         except Exception as e:
             try:
                 if u.driver:
