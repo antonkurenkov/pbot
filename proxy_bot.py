@@ -21,7 +21,7 @@ class User(Solver, Producer):
         if not self.virtual:
 
             self.create_user()
-            self.create_driver(proxy=proxy)
+            self.create_driver(proxy=proxy, headless=False)
             self.required_block, self.optional_block = self.produce_data()
             self.done = False
             self.speed = 1 + (random.randint(-7, 5) / 10)
@@ -222,54 +222,55 @@ class User(Solver, Producer):
                     self.do_random_stuff()
                 return True
 
-        if self.happened(probability_coeff=50):  # 25%
-            self.scroll()
-        if self.happened(probability_coeff=20):  # 25%
-            if not self.virtual:
-                time.sleep(random.randint(1, 6))
+        # if self.happened(probability_coeff=50):  # 25%
+        #     self.scroll()
+        # if self.happened(probability_coeff=20):  # 25%
+        #     if not self.virtual:
+        #         time.sleep(random.randint(1, 6))
+        #
+        # if not redirected(probability_coeff=20):  # 10%
+        #
+        #     if self.happened(probability_coeff=500):  # 90%
+        #         self.find_required_fields_for_input()
+        #         self.scroll(px=random.randint(100, 200), scrollback=False)
+        #
+        #         if self.happened(probability_coeff=20):  # 25%
+        #             if not self.virtual:
+        #                 time.sleep(random.randint(1, 6))
+        #
+        #         if not redirected(probability_coeff=1):  # 2%
+        #
+        #             if self.happened(probability_coeff=100):  # 50%
+        #                 self.find_optional_fields_for_input()
+        #
+        #                 if self.happened(probability_coeff=20):
+        #                     self.scroll(forward=False)
+        #
+        #             if self.happened(probability_coeff=20):  # 25%
+        #                 if not self.virtual:
+        #                     time.sleep(random.randint(1, 6))
+        #
+        #             if self.happened(probability_coeff=500):  # 90%
+        self.scroll(forward=True, scrollback=False, px=2000)
+        self.solve_captcha(on_login_page=True)
 
-        if not redirected(probability_coeff=20):  # 10%
+        if not redirected(probability_coeff=5):  # 3.5%
 
-            if self.happened(probability_coeff=500):  # 90%
-                self.find_required_fields_for_input()
-                self.scroll(px=random.randint(100, 200), scrollback=False)
+            if self.happened(probability_coeff=20):
+                self.scroll(forward=False)
 
-                if self.happened(probability_coeff=20):  # 25%
-                    if not self.virtual:
-                        time.sleep(random.randint(1, 6))
+            self.submit_form()
 
-                if not redirected(probability_coeff=1):  # 2%
+            if not redirected(probability_coeff=10):  # 6%
 
-                    if self.happened(probability_coeff=100):  # 50%
-                        self.find_optional_fields_for_input()
-
-                        if self.happened(probability_coeff=20):
-                            self.scroll(forward=False)
+                if self.happened(probability_coeff=20):  # 10%
+                    self.click_back()
 
                     if self.happened(probability_coeff=20):  # 25%
                         if not self.virtual:
                             time.sleep(random.randint(1, 6))
 
-                    if self.happened(probability_coeff=500):  # 90%
-                        self.solve_captcha(on_login_page=True)
-
-                        if not redirected(probability_coeff=5):  # 3.5%
-
-                            if self.happened(probability_coeff=20):
-                                self.scroll(forward=False)
-
-                            self.submit_form()
-
-                            if not redirected(probability_coeff=10):  # 6%
-
-                                if self.happened(probability_coeff=20):  # 10%
-                                    self.click_back()
-
-                                    if self.happened(probability_coeff=20):  # 25%
-                                        if not self.virtual:
-                                            time.sleep(random.randint(1, 6))
-
-                                    redirected(probability_coeff=10)  # 6%
+                    redirected(probability_coeff=10)  # 6%
 
     def be_human(self, url: str):
         if not self.virtual:
@@ -295,34 +296,45 @@ if __name__ == '__main__':
     bot_number = 76
 
     used_queue = []
-    for i in range(bot_number):
-    # while True:
+    # for i in range(bot_number):
+    while True:
         try:
-            while True:
-                try:
-                    proxy = get_proxy_from_geo()
-                    u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
-                    break
-                except Exception as e:
-                    print(f'user init failed with {get_exceptions_args()}')
-                    raise e
-            redirected = u.get_redirected_url()
-            time_string = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            print(f'[{time_string}] VISIT {redirected} over {u.proxy}')
-            success = u.be_human(redirected)
-            if success:
-                if not u.virtual:
-                    time.sleep(random.randint(1, 10))
-                used_queue.append(u.proxy)
-            u.driver.quit()
+            # proxy = get_proxy_from_geo()
+            proxy = None
+            try:
+                u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
+                redirected = u.get_redirected_url()
+            except Exception as e:
+                print(f'user init failed with {e} on {get_exceptions_args()}')
+                raise e
+
+            try:
+                print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy}')
+                success = u.be_human(redirected)
+            except Exception as e:
+                print(f'user walk failed with {e} on {get_exceptions_args()}')
+                raise e
+            # if success:
+            #     if not virtual:
+            #         time.sleep(random.randint(1, 10))
+            #     used_queue.append(u.proxy)
+            # u.driver.quit()
         except Exception as e:
-            print(get_exceptions_args())
+            try:
+                if u.driver:
+                    u.driver.quit()
+                    time.sleep(random.randint(1, 10))
+            except:
+                pass
+
+            print(f'Exc = {e}')
             success = False
         print('---')
-        processes = subprocess.getoutput(['pgrep chrome'])
-        if processes:
-            subprocess.call(f'sudo kill -9 {processes}'.split())
-        # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
+
+        # processes = subprocess.getoutput(['pgrep chrome'])
+        # if processes:
+        #     subprocess.call(f'sudo kill -9 {processes}'.split())
+        
         if not virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')

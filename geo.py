@@ -60,7 +60,7 @@ def main():
                         p.driver.quit()
                         print(f'WRONG TITLE {p.driver.title}')
             except Exception as e:
-                print(f'BAD {proxy}')
+                print(f'BAD {proxy}; {e}')
                 p.driver.quit()
                 continue
 

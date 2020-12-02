@@ -151,7 +151,7 @@ class Solver(CNN):
         if on_login_page:
             self.driver.execute_script("window.scrollBy(0,2000)")
         obj = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located(
+            EC.presence_of_element_located(
                 (By.XPATH, '//div[@class="prompt-text"]'))) \
             .text.split(' ')[-1] \
             .replace("motorbus", "bus")
@@ -160,10 +160,10 @@ class Solver(CNN):
         self.solve_challenge(obj)
         self.driver.switch_to.default_content()
 
-    def solve_hcaptcha(self, on_login_page=False):
+    def solve_hcaptcha(self, on_login_page=True):
         print('[SOLVER] SOLVING HCAPTCHA...')
         hcaptcha = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, '//div[@class="h-captcha"]/iframe')))
+            EC.presence_of_element_located((By.XPATH, '//div[@class="h-captcha"]')))
         hcaptcha.click()
         while True:
             # self.presence_of_challenge = True
