@@ -35,8 +35,8 @@ def main():
             loop = asyncio.get_event_loop()
             loop.run_until_complete(tasks)
         except Exception as e:
-            print(get_exceptions_args())
-            continue
+            print(f'error in {get_exceptions_args()}')
+            break
 
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
