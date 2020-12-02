@@ -311,6 +311,7 @@ if __name__ == '__main__':
     used_queue = []
     # for i in range(bot_number):
     while True:
+        success = False
         try:
             proxy = get_proxy_from_geo()
             # proxy = None
