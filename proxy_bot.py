@@ -333,7 +333,7 @@ if __name__ == '__main__':
 
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
-            killed = subprocess.check_output(f'sudo kill -9 {processes}'.split())
+            killed = subprocess.call(f'sudo kill -9 {processes}'.split(), shell=True)
             processes = processes.replace('\n', ' ')
             print(f'killed {processes}')
 
