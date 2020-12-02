@@ -295,7 +295,7 @@ class User(Solver, Producer):
             self.do_job()
             success = True
         else:
-            print(f'bad connect [{self.driver.title}]')
+            print(f'bad connect to [{self.driver.title}] via {self.proxy}')
             success = False
         return success
 
