@@ -30,3 +30,6 @@ RUN python3.6 -m pip install --force-reinstall -r requirements.txt --no-cache-di
 
 #CMD ["python3.6", "proxy_bot.py"]
 CMD ["sh", "-c", "python3.6 proxy_bot.py"]
+# sudo docker build -t foo0 . && sudo docker run --rm -t foo0
+# sudo docker build -t foo0 . && sudo docker run --rm -t -d foo0
+# docker logs --follow <container>

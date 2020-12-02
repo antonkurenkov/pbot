@@ -24,7 +24,7 @@ class Producer:
         self.purpose = None
         self.adress = None
 
-        self.useragent = None
+        self.agent = None
         self.driver = None
 
     def validate_user(self, items):
@@ -67,7 +67,6 @@ class Producer:
             i = f.name().split(' ')
             if self.validate_user(i):
                 self.adress = f.address()
-                self.useragent = self.create_useragent()
                 break
 
         return self.firstname, self.middlename, self.lastname
@@ -130,16 +129,30 @@ class Producer:
         # options.add_argument("--disable-setuid-sandbox")
         # options.add_experimental_option('useAutomationExtension', False)
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
-        options.add_argument(self.useragent)
+        # if random.randint(0, 100) >= 30:
+        if False:
+            # random device; mostly pc
+            self.agent = self.create_useragent()
+            options.add_argument(f'--user-agent={ua}')
+            if random.randint(0, 100) >= 30:
+                options.add_argument('--start-maximized')
+            elif random.randint(0, 100) >= 30:
+                options.add_argument("window-size=1920,1080")
+            elif random.randint(0, 100) >= 30:
+                options.add_argument("window-size=1024,768")
+        else:
+            # mobile device
+            dims = (
+                (360, 640), (375, 667), (414, 896), (360, 780), (360, 760),
+                (375, 812), (360, 720), (414, 736), (412, 846), (360, 740),
+                (412, 892), (412, 869), (393, 851), (412, 732), (320, 568),
+                (720, 1280), (1080, 1920), (360, 800), (320, 570), (1080, 2340))
+            size = random.choice(dims)
+            options.add_argument(f"window-size={size[0]},{size[1]}")
+            with open('agents_m', encoding="utf-8") as file:
+                self.agent = random.choice(file.read().split('\n'))
+            options.add_argument(f'--user-agent={self.agent}')
         options.headless = headless
-
-        if random.randint(0, 100) >= 30:
-            options.add_argument('--start-maximized')
-        elif random.randint(0, 100) >= 30:
-            options.add_argument("window-size=1920,1080")
-        elif random.randint(0, 100) >= 30:
-            options.add_argument("window-size=1024,768")
 
         if choice[0] == 'chrome':
             self.driver = webdriver.Chrome(options=options, executable_path=path)

@@ -322,7 +322,7 @@ if __name__ == '__main__':
                 raise e
 
             try:
-                print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy}')
+                print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy} with [{u.agent}]')
                 success = u.be_human(redirected)
                 try:
                     u.do_job()

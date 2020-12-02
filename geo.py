@@ -6,15 +6,13 @@ from exceptions import get_exceptions_args
 from cradle import Producer
 import time
 import os
-
-"""Find 10 working HTTP(S) proxies and save them to a file."""
+import subprocess
 
 import asyncio
 from proxybroker import Broker
 
 
 async def save(proxies, filename):
-    """Save proxies to a file."""
     with open(filename, 'w') as f:
         while True:
             proxy = await proxies.get()
@@ -34,6 +32,14 @@ def main():
                                    save(proxies, filename='proxies.txt'))
             loop = asyncio.get_event_loop()
             loop.run_until_complete(tasks)
+        except RuntimeError:
+            print(f'runtime error, exiting')
+            processes = subprocess.getoutput(['pgrep chrome'])
+            if processes:
+                killed = subprocess.getoutput(f'sudo kill -9 {processes}'.split())
+                processes = processes.replace('\n', ' ')
+                print(f'killed {processes}')
+            exit(1)
         except Exception as e:
             print(f'error in {get_exceptions_args()}')
             break
@@ -46,7 +52,8 @@ def main():
             proxy = i.split('//')[-1]
             try:
                 p.create_driver(proxy, headless=True)
-                p.driver.get('https://api.ipify.org?format=json')
+                judge = 'https://api.ipify.org?format=json'
+                p.driver.get(judge)
                 time.sleep(1)
                 body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
                 if '"ip"' in body.text:
@@ -59,6 +66,9 @@ def main():
                     else:
                         p.driver.quit()
                         print(f'WRONG TITLE {p.driver.title}')
+                else:
+                    print(f'WRONG JUDGE {judge}')
+                    p.driver.quit()
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 p.driver.quit()
