@@ -318,7 +318,6 @@ if __name__ == '__main__':
         except Exception as e:
             print(get_exceptions_args())
             success = False
-            raise e
         print('---')
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
