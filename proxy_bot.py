@@ -321,7 +321,7 @@ if __name__ == '__main__':
         print('---')
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
-            subprocess.Popen(f'sudo kill -9 {processes}'.split())
+            subprocess.call(f'sudo kill -9 {processes}'.split())
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
         if not virtual and success:
             zzz = random.randint(10, 1800)
