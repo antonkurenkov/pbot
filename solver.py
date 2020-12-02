@@ -153,7 +153,7 @@ class Solver(CNN):
         body = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//body')))
-        print(body.get_attribute('innerHTML'))
+        # print(body.get_attribute('innerHTML'))
         obj = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.XPATH, '//div[@class="prompt-text"]'))) \
