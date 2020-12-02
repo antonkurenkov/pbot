@@ -292,7 +292,6 @@ class User(Solver, Producer):
         if self.virtual or self.driver.title == 'Payment QR-code generator':
             if not self.virtual:
                 WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-            self.do_job()
             success = True
         else:
             print(f'bad connect to [{self.driver.title}] via {self.proxy}')
@@ -325,11 +324,17 @@ if __name__ == '__main__':
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy}')
                 success = u.be_human(redirected)
+                try:
+                    u.do_job()
+                    u.driver.quit()
+                except Exception as e:
+                    print(f'FAILED JOB [{url_to_visit}] ON [{proxy}]')
+                    raise e
                 if not virtual:
                     time.sleep(random.randint(1, 10))
-                u.driver.quit()
+
             except Exception as e:
-                print(f'user walk failed with {e} on {get_exceptions_args()}')
+                print(f'user touch failed with {e} on {get_exceptions_args()}')
                 raise e
 
         except Exception as e:
