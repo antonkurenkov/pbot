@@ -326,7 +326,12 @@ if __name__ == '__main__':
                 success = u.be_human(redirected)
                 try:
                     u.do_job()
-                    u.driver.quit()
+                    try:
+                        if u.driver:
+                            u.driver.quit()
+                            time.sleep(random.randint(1, 10))
+                    except:
+                        pass
                 except Exception as e:
                     print(f'FAILED JOB [{url_to_visit}] ON [{proxy}]')
                     raise e

@@ -41,11 +41,13 @@ def main():
                 print(f'killed {processes}')
             exit(1)
         except Exception as e:
-            print(f'error in {get_exceptions_args()}')
+            print(f'error in {get_exceptions_args()}, proxy=None')
             break
 
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
+
+        proxy = None
         for i in pool:
             p = Producer()
             p.create_user()
@@ -54,25 +56,46 @@ def main():
                 p.create_driver(proxy, headless=True)
                 judge = 'https://api.ipify.org?format=json'
                 p.driver.get(judge)
-                time.sleep(1)
-                body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-                if '"ip"' in body.text:
-                    p.driver.get('https://www.payqrcode.ru')
-                    if p.driver.title == 'Payment QR-code generator':
-                        with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+', encoding="utf-8") as file:
-                            file.write(proxy + '\n')
-                        p.driver.quit()
-                        return proxy
-                    else:
-                        p.driver.quit()
-                        print(f'WRONG TITLE {p.driver.title}')
-                else:
-                    print(f'WRONG JUDGE {judge}')
-                    p.driver.quit()
+                break
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 p.driver.quit()
+                proxy = None
                 continue
+        if proxy is None:
+            continue
+
+        time.sleep(1)
+        body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
+        if '"ip"' in body.text:
+            p.driver.get('https://www.payqrcode.ru')
+            if p.driver.title == 'Payment QR-code generator':
+                with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+', encoding="utf-8") as file:
+                    file.write(proxy + '\n')
+                try:
+                    if p.driver:
+                        p.driver.quit()
+                except:
+                    pass
+                return proxy
+            else:
+                print(f'WRONG TITLE {p.driver.title}')
+                try:
+                    if p.driver:
+                        p.driver.quit()
+                except:
+                    pass
+        else:
+            print(f'WRONG JUDGE {judge}')
+            try:
+                if p.driver:
+                    p.driver.quit()
+            except:
+                pass
+        # except Exception as e:
+        #     print(f'BAD {proxy}; {e}')
+        #     p.driver.quit()
+        #     continue
 
 
 
