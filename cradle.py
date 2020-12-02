@@ -76,7 +76,7 @@ class Producer:
         if self.virtual:
             return
         if proxy and not isinstance(proxy, str):
-            with open(os.path.join(os.getcwd(), 'tested_proxies.txt')) as file:
+            with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), encoding="utf-8") as file:
                 lines = file.read().split()
                 proxy = random.choice(lines).strip()
         choice = random.choice([
@@ -149,10 +149,10 @@ class Producer:
             self.driver = webdriver.Opera(options=options, executable_path=path)
 
     def produce_data(self):
-        with open(os.path.join(os.getcwd(), 'userdata', 'banknames.txt')) as file:
+        with open(os.path.join(os.getcwd(), 'userdata', 'banknames.txt'), encoding="utf-8") as file:
         # with open('/Users/antonkurenkov/Proj/pbot/userdata/banknames.txt') as file:
             self.bankname = random.choice(file.read().split('\n'))
-        with open(os.path.join(os.getcwd(), 'userdata', 'purposes.txt')) as file:
+        with open(os.path.join(os.getcwd(), 'userdata', 'purposes.txt'), encoding="utf-8") as file:
         # with open('/Users/antonkurenkov/Proj/pbot/userdata/purposes.txt') as file:
             self.purpose = random.choice(file.read().split('\n'))
         obligatory_block = {

@@ -38,7 +38,7 @@ def main():
             print(get_exceptions_args())
             continue
 
-        with open(os.path.join(os.getcwd(), 'proxies.txt')) as file:
+        with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
         for i in pool:
             p = Producer()
@@ -52,7 +52,7 @@ def main():
                 if '"ip"' in body.text:
                     p.driver.get('https://www.payqrcode.ru')
                     if p.driver.title == 'Payment QR-code generator':
-                        with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+') as file:
+                        with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+', encoding="utf-8") as file:
                             file.write(proxy + '\n')
                         p.driver.quit()
                         return proxy
