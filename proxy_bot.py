@@ -306,7 +306,6 @@ if __name__ == '__main__':
                 except Exception as e:
                     print(f'user init failed with {get_exceptions_args()}')
                     raise e
-
             redirected = u.get_redirected_url()
             time_string = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
             print(f'[{time_string}] VISIT {redirected} over {u.proxy}')
@@ -318,7 +317,6 @@ if __name__ == '__main__':
             u.driver.quit()
         except Exception as e:
             print(get_exceptions_args())
-            u.driver.quit()
             success = False
         print('---')
         # subprocess.check_call(['killall', 'chrome'])

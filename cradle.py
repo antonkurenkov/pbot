@@ -131,7 +131,7 @@ class Producer:
         elif random.randint(0, 100) >= 30:
             options.add_argument("window-size=1024,768")
 
-        # options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-dev-shm-usage')
 
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
