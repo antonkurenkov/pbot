@@ -334,7 +334,7 @@ if __name__ == '__main__':
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
             killed = subprocess.check_output(f'sudo kill -9 {processes}'.split())
-            print(killed)
+            print(f'killed {processes}')
 
         if not virtual and success:
             zzz = random.randint(10, 1800)
