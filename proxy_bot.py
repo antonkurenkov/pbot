@@ -299,8 +299,8 @@ if __name__ == '__main__':
     # for i in range(bot_number):
     while True:
         try:
-            # proxy = get_proxy_from_geo()
-            proxy = None
+            proxy = get_proxy_from_geo()
+            # proxy = None
             try:
                 u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy, headless=True)  # or proxy=True to take random from tested.txt
                 redirected = u.get_redirected_url()
@@ -334,6 +334,7 @@ if __name__ == '__main__':
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
             killed = subprocess.check_output(f'sudo kill -9 {processes}'.split())
+            processes = processes.replace('\n', ' ')
             print(f'killed {processes}')
 
         if not virtual and success:
