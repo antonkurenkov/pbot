@@ -26,9 +26,9 @@ class CNN:
                 im = cv2.imdecode(nparr, flags=1)
                 objects = cv.detect_common_objects(im, confidence=0.5, nms_thresh=1, enable_gpu=False)[1]
                 if obj.lower() in objects:
-                    # print(f'[CNN] object is a {obj} from [{objects}]')
+                    print(f'[CNN] object is a {obj} from [{objects}]')
                     return True
-                # print(f'[CNN] object is not a {obj} from [{objects}]')
+                print(f'[CNN] object is not a {obj} from [{objects}]')
                 return False
             except Exception as e:
                 print(e)
