@@ -72,7 +72,7 @@ class Producer:
 
         return self.firstname, self.middlename, self.lastname
 
-    def create_driver(self, proxy=None, headless=False):
+    def create_driver(self, proxy=None, headless=True):
         if self.virtual:
             return
         if proxy and not isinstance(proxy, str):
