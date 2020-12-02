@@ -14,14 +14,14 @@ import time
 
 class User(Solver, Producer):
 
-    def __init__(self, url, local, virtual=False, proxy=None):
+    def __init__(self, url, local, virtual=False, proxy=None, headless=True):
         super().__init__()
         self.virtual = virtual
         self.proxy = proxy
         if not self.virtual:
 
             self.create_user()
-            self.create_driver(proxy=proxy, headless=False)
+            self.create_driver(proxy=proxy, headless=headless)
             self.required_block, self.optional_block = self.produce_data()
             self.done = False
             self.speed = 1 + (random.randint(-7, 5) / 10)
@@ -302,7 +302,7 @@ if __name__ == '__main__':
             # proxy = get_proxy_from_geo()
             proxy = None
             try:
-                u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
+                u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy, headless=True)  # or proxy=True to take random from tested.txt
                 redirected = u.get_redirected_url()
             except Exception as e:
                 print(f'user init failed with {e} on {get_exceptions_args()}')
