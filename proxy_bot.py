@@ -295,7 +295,7 @@ class User(Solver, Producer):
             self.do_job()
             success = True
         else:
-            print(self.driver.title)
+            print(f'bad connect [{self.driver.title}]')
             success = False
         return success
 
@@ -354,6 +354,8 @@ if __name__ == '__main__':
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)
+        else:
+            print(f'success is {success}, retrying')
 
 
 #  https://aviso.bz/?r=bohdanknyaz
