@@ -131,13 +131,13 @@ class Producer:
         elif random.randint(0, 100) >= 30:
             options.add_argument("window-size=1024,768")
 
-        options.add_argument('--disable-dev-shm-usage')
-
-        options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
         options.add_argument("--disable-infobars")
         options.add_argument("--disable-extensions")
         # options.add_argument("--disable-setuid-sandbox")
+        options.add_experimental_option('useAutomationExtension', False)
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         if choice[0] == 'chrome':
