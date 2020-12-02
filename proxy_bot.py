@@ -318,10 +318,11 @@ if __name__ == '__main__':
         except Exception as e:
             print(get_exceptions_args())
             success = False
+            raise e
         print('---')
         # subprocess.check_call(['killall', 'chrome'])
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
-        if not u.virtual and success:
+        if not virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)
