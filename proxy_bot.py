@@ -351,7 +351,6 @@ if __name__ == '__main__':
                 pass
 
             print(f'Exc = {e}')
-            success = False
         print('---')
 
         processes = subprocess.getoutput(['pgrep chrome'])
