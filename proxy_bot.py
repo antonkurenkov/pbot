@@ -7,7 +7,7 @@ from cradle import Producer
 from geo import main as get_proxy_from_geo
 from exceptions import get_exceptions_args
 
-
+import subprocess
 import random
 import time
 
@@ -320,7 +320,9 @@ if __name__ == '__main__':
             success = False
             raise e
         print('---')
-        # subprocess.check_call(['killall', 'chrome'])
+        processes = subprocess.getoutput(['pgrep chrome'])
+        if processes:
+            subprocess.Popen(f'sudo kill -9 {processes}'.split())
         # ss = subprocess.check_output('sudo rm ~/.config/opera && sudo unzip opera-conf.zip -d ~/.config/opera')
         if not virtual and success:
             zzz = random.randint(10, 1800)
