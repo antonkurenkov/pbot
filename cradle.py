@@ -129,8 +129,7 @@ class Producer:
         # options.add_argument("--disable-setuid-sandbox")
         # options.add_experimental_option('useAutomationExtension', False)
         # options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        # if random.randint(0, 100) >= 30:
-        if False:
+        if random.randint(0, 100) >= 30:
             # random device; mostly pc
             self.agent = self.create_useragent()
             options.add_argument(f'--user-agent={ua}')
