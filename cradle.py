@@ -121,6 +121,16 @@ class Producer:
             # opera_profile = '	/Users/antonkurenkov/Library/Application Support/com.operasoftware.Opera'
             # options.add_argument('user-data-dir=' + opera_profile)
 
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-extensions")
+        options.add_argument('--remote-debugging-port=9222')
+        options.add_argument("--disable-setuid-sandbox")
+        options.add_experimental_option('useAutomationExtension', False)
+        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
         options.add_argument(self.useragent)
         options.headless = headless
 
@@ -130,15 +140,6 @@ class Producer:
             options.add_argument("window-size=1920,1080")
         elif random.randint(0, 100) >= 30:
             options.add_argument("window-size=1024,768")
-
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--disable-gpu')
-        options.add_argument("--disable-infobars")
-        options.add_argument("--disable-extensions")
-        # options.add_argument("--disable-setuid-sandbox")
-        options.add_experimental_option('useAutomationExtension', False)
-        # options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         if choice[0] == 'chrome':
             self.driver = webdriver.Chrome(options=options, executable_path=path)
