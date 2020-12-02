@@ -331,10 +331,11 @@ if __name__ == '__main__':
             success = False
         print('---')
 
-        # processes = subprocess.getoutput(['pgrep chrome'])
-        # if processes:
-        #     subprocess.call(f'sudo kill -9 {processes}'.split())
-        
+        processes = subprocess.getoutput(['pgrep chrome'])
+        if processes:
+            killed = subprocess.check_output(f'sudo kill -9 {processes}'.split())
+            print(killed)
+
         if not virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
