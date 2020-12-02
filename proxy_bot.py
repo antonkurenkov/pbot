@@ -4,8 +4,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from solver import Solver
 from cradle import Producer
-from geo import main as get_driver_from_geo
+from geo import main as get_proxy_from_geo
 from exceptions import get_exceptions_args
+
 
 import random
 import time
@@ -20,9 +21,7 @@ class User(Solver, Producer):
         if not self.virtual:
 
             self.create_user()
-            # self.create_driver(proxy=proxy)
-            # self.create_driver(proxy=proxy)
-            self.driver, self.proxy = get_driver_from_geo()
+            self.create_driver(proxy=proxy)
             self.required_block, self.optional_block = self.produce_data()
             self.done = False
             self.speed = 1 + (random.randint(-7, 5) / 10)
@@ -301,11 +300,12 @@ if __name__ == '__main__':
         try:
             while True:
                 try:
-                    # proxy = get_proxy_from_geo()
-                    u = User(url_to_visit, local=users_local, virtual=virtual, proxy=True)  # or proxy=True to take random from tested.txt
+                    proxy = get_proxy_from_geo()
+                    u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy)  # or proxy=True to take random from tested.txt
                     break
                 except Exception as e:
                     print(f'user init failed with {get_exceptions_args()}')
+                    raise e
 
             redirected = u.get_redirected_url()
             time_string = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())

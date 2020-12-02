@@ -1,5 +1,13 @@
 sudo apt-get -y update
 
+#sudo nano /etc/default/locale
+#LANGUAGE=en_US.UTF-8
+#LC_ALL=en_US.UTF-8
+#LANG=en_US.UTF-8
+#LC_TYPE=en_US.UTF-8
+#sudo locale-gen en_US.UTF-8
+#sudo dpkg-reconfigure locales
+
 # INSTALL PYTHON
 sudo apt install -y build-essential checkinstall
 sudo apt install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
@@ -10,6 +18,7 @@ cd Python-3.6.8
 sudo ./configure --enable-optimizations
 sudo make -j8
 sudo make install
+cd ..
 
 # INSTALL SCREEN LIBS
 
@@ -31,12 +40,12 @@ sudo apt install -y firefox
 
 # UPDATE PYTHON
 sudo apt-get install -y python3-pip
-sudo pip3 install testresources
-sudo python3.6 -m pip install --upgrade pip setuptools wheel
+sudo python3.6 -m pip install --upgrade testresources pip setuptools wheel
 
 # INSTALL DEPENDENCIES
 cd pbot
-sudo python3.6 -m pip install --no-deps --force-reinstall -r requirements.txt --no-cache-dir
+sudo python3.6 -m pip install --force-reinstall -r requirements.txt --no-cache-dir
+
 
 
 # sudo apt-get install supervisor

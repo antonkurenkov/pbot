@@ -2,6 +2,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
+from exceptions import get_exceptions_args
 from cradle import Producer
 import time
 import os
@@ -33,30 +34,35 @@ def main():
                                    save(proxies, filename='proxies.txt'))
             loop = asyncio.get_event_loop()
             loop.run_until_complete(tasks)
-
-            with open(os.path.join(os.getcwd(), 'proxies.txt')) as file:
-                pool = file.read().split()
-            for i in pool:
-                p = Producer()
-                p.create_user()
-                proxy = i.split('//')[-1]
-                try:
-                    p.create_driver(proxy, headless=True)
-                    p.driver.get('https://api.ipify.org?format=json')
-                    time.sleep(1)
-                    body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-                    if '"ip"' in body.text:
-                        p.driver.get('https://www.payqrcode.ru')
-                        if p.driver.title == 'Payment QR-code generator':
-                            with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+') as file:
-                                file.write(proxy + '\n')
-                            # p.driver.quit()
-                            return p.driver, proxy
-                except Exception as e:
-                    print(f'BAD {proxy}')
-                    p.driver.quit()
         except Exception as e:
-            print(e)
+            print(get_exceptions_args())
+            continue
+
+        with open(os.path.join(os.getcwd(), 'proxies.txt')) as file:
+            pool = file.read().split()
+        for i in pool:
+            p = Producer()
+            p.create_user()
+            proxy = i.split('//')[-1]
+            try:
+                p.create_driver(proxy, headless=True)
+                p.driver.get('https://api.ipify.org?format=json')
+                time.sleep(1)
+                body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
+                if '"ip"' in body.text:
+                    p.driver.get('https://www.payqrcode.ru')
+                    if p.driver.title == 'Payment QR-code generator':
+                        with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+') as file:
+                            file.write(proxy + '\n')
+                        p.driver.quit()
+                        return proxy
+                    else:
+                        p.driver.quit()
+                        print(f'WRONG TITLE {p.driver.title}')
+            except Exception as e:
+                print(f'BAD {proxy}')
+                p.driver.quit()
+                continue
 
 
 
