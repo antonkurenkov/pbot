@@ -47,6 +47,7 @@ def main():
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
 
+        judge = 'https://api.ipify.org?format=json'
         proxy = None
         for i in pool:
             p = Producer()
@@ -54,12 +55,15 @@ def main():
             proxy = i.split('//')[-1]
             try:
                 p.create_driver(proxy, headless=True)
-                judge = 'https://api.ipify.org?format=json'
                 p.driver.get(judge)
                 break
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
-                p.driver.quit()
+                try:
+                    if p.driver:
+                        p.driver.quit()
+                except:
+                    pass
                 proxy = None
                 continue
         if proxy is None:
@@ -84,14 +88,14 @@ def main():
                     if p.driver:
                         p.driver.quit()
                 except:
-                    pass
+                    continue
         else:
             print(f'WRONG JUDGE {judge}')
             try:
                 if p.driver:
                     p.driver.quit()
             except:
-                pass
+                continue
         # except Exception as e:
         #     print(f'BAD {proxy}; {e}')
         #     p.driver.quit()

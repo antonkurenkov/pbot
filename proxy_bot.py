@@ -339,7 +339,7 @@ if __name__ == '__main__':
                     time.sleep(random.randint(1, 10))
 
             except Exception as e:
-                print(f'user touch failed with {e} on {get_exceptions_args()}')
+                print(f'user visit failed with {e} on {get_exceptions_args()}')
                 raise e
 
         except Exception as e:
