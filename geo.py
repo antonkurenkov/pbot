@@ -53,11 +53,12 @@ def get_judges():
             'https://vesti.ua/'
         )
 
-    sex = random.choice(['male', 'female'])
+    sex = random.choice(['male', 'male', 'male', 'female'])
     history = {
         'female': [
             'тушь для ресниц',
             'помада для губ',
+            'тональный крем купить',
             'макияж',
             'свадебное платье',
             'летуаль',
@@ -65,7 +66,10 @@ def get_judges():
             'prada',
             'gucci',
             'versace',
-            'barbie'
+            'barbie',
+            'куртка женская',
+            'шуба женская',
+            'сапоги женские купить в москве'
         ],
         'male': [
             'порно',
@@ -76,6 +80,12 @@ def get_judges():
             'призывной возраст',
             'отсрочка от армии',
             'военный билет'
+            'nvidia geforce gtx 3090',
+            'рыболовные блесны купить',
+            'пикап форум',
+            'как познакомиться с девушкой в интернете',
+            'кроссовки мужские',
+            'тренировочный костюм мужской недорого',
         ]
     }
     get_request = lambda: random.choice(history[sex])
@@ -83,7 +93,7 @@ def get_judges():
     get_url = lambda request: f'https://yandex.ru/search/?msid={get_seq(10)}.{get_seq(5)}.{get_seq(5)}.{get_seq(6)}&text={request}&suggest_reqid={get_seq(33)}'
 
     search_history = [get_request() for _ in range(random.randint(0, 3))]
-    search_urls = [get_url(query) for query in search_history]
+    search_urls = [get_url(query.replace(' ', '+')) for query in search_history]
 
     direct_urls = [random.choice(arr) for _ in range(random.randint(0, 3))]
 
