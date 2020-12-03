@@ -137,7 +137,7 @@ def main():
                         else:
                             print(f'UNKNOWN ERROR {e} with {proxy}')
 
-                break  # proxy loop
+                break  # check proxy from pool in loop
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 try:
