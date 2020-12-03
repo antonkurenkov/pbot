@@ -385,7 +385,7 @@ if __name__ == '__main__':
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
             processes = processes.replace('\n', ' ')
-            killed = subprocess.getoutput(f'sudo kill -9 {processes.split()}')
+            killed = subprocess.getoutput(f'sudo kill -9 {"".join(processes.split())}')
             print(f'killed [{killed}] from [{processes}]')
 
         if not virtual and success:

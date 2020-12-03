@@ -126,7 +126,7 @@ def main():
             processes = subprocess.getoutput(['pgrep chrome'])
             if processes:
                 processes = processes.replace('\n', ' ')
-                killed = subprocess.getoutput(f'sudo kill -9 {processes.split()}')
+                killed = subprocess.getoutput(f'sudo kill -9 {"".join(processes.split())}')
                 print(f'killed [{killed}] from [{processes}]')
             exit(1)
         except Exception as e:
