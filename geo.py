@@ -90,7 +90,10 @@ def get_judges():
     }
     get_request = lambda: random.choice(history[sex])
     get_seq = lambda x: ''.join([str(random.randint(0, 10)) for _ in range(x)])
-    get_url = lambda request: f'https://yandex.ru/search/?msid={get_seq(10)}.{get_seq(5)}.{get_seq(5)}.{get_seq(6)}&text={request}&suggest_reqid={get_seq(33)}'
+
+    get_url1 = lambda request: f'https://yandex.ru/search/?msid={get_seq(10)}.{get_seq(5)}.{get_seq(5)}.{get_seq(6)}&text={request}&suggest_reqid={get_seq(33)}'
+    get_url2 = lambda request: f'https://yandex.ru/search/?&text={request}'
+    get_url = random.choice([get_url1, get_url2])
 
     search_history = [get_request() for _ in range(random.randint(0, 3))]
     search_urls = [get_url(query.replace(' ', '+')) for query in search_history]
@@ -118,9 +121,9 @@ def main():
             print(f'runtime error, exiting')
             processes = subprocess.getoutput(['pgrep chrome'])
             if processes:
-                killed = subprocess.getoutput(f'sudo kill -9 {processes}'.split())
                 processes = processes.replace('\n', ' ')
-                print(f'killed {processes}')
+                killed = subprocess.getoutput(f'sudo kill -9 {processes.split()}')
+                print(f'killed [{killed}] from [{processes}]')
             exit(1)
         except Exception as e:
             print(f'error in {get_exceptions_args()}, proxy=None')

@@ -356,7 +356,12 @@ if __name__ == '__main__':
                 except Exception as e:
                     print(f'FAILED JOB [{url_to_visit}] ON [{proxy}]')
                     if success:
-                        break
+                        try:
+                            if u.driver:
+                                u.driver.quit()
+                                time.sleep(random.randint(1, 10))
+                        except:
+                            pass
                     else:
                         raise e
                 if not virtual:
@@ -379,9 +384,9 @@ if __name__ == '__main__':
 
         processes = subprocess.getoutput(['pgrep chrome'])
         if processes:
-            killed = subprocess.getoutput(f'sudo kill -9 {processes}'.split())
             processes = processes.replace('\n', ' ')
-            print(f'killed {processes}')
+            killed = subprocess.getoutput(f'sudo kill -9 {processes.split()}')
+            print(f'killed [{killed}] from [{processes}]')
 
         if not virtual and success:
             zzz = random.randint(10, 1800)
