@@ -1,6 +1,7 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import WebDriverException
 
 from solver import Solver
 from cradle import Producer
@@ -286,17 +287,35 @@ class User(Solver, Producer):
 
                             redirected(probability_coeff=10)  # 6%
 
-    def be_human(self, url: str):
-        if not self.virtual:
-            self.driver.get(url)
-        if self.virtual or self.driver.title == 'Payment QR-code generator':
-            if not self.virtual:
-                WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-            success = True
-        else:
-            print(f'bad connect to [{self.driver.title}] via {self.proxy}')
-            success = False
-        return success
+    def be_human(self, url, retries=10):
+
+        def refresh():
+            print(f'bad connect to [{self.driver.title}] via {self.proxy}, refreshing...')
+            self.driver.refresh()
+            time.sleep(1)
+
+        succ = False
+        while retries:
+            try:
+                if not self.virtual:
+                    self.driver.get(url)
+                if self.virtual or self.driver.title == 'Payment QR-code generator':
+                    if not self.virtual:
+                        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
+                    succ = True
+                    break
+                else:
+                    refresh()
+                    retries -= 1
+                    continue
+            except WebDriverException as e:
+                if 'ERR_TUNNEL_CONNECTION_FAILED' in str(e):
+                    refresh()
+                    retries -= 1
+                    continue
+                else:
+                    raise e
+        return succ
 
 
 if __name__ == '__main__':
@@ -324,7 +343,7 @@ if __name__ == '__main__':
 
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy} with [{u.agent}]')
-                success = u.be_human(redirected)
+                success = u.be_human(url=redirected, retries=10)
                 try:
                     u.do_job()
                     try:

@@ -7,6 +7,7 @@ from cradle import Producer
 import time
 import os
 import subprocess
+import random
 
 import asyncio
 from proxybroker import Broker
@@ -21,6 +22,76 @@ async def save(proxies, filename):
             proto = 'https' if 'HTTPS' in proxy.types else 'http'
             row = '%s://%s:%d\n' % (proto, proxy.host, proxy.port)
             f.write(row)
+
+
+def get_judges():
+    age = random.randint(18, 55)
+    if age in range(18, 25):
+        arr = (
+            'https://pikabu.ru',
+            'https://www.tiktok.com/',
+            'https://steamcommunity.com/',
+            'https://www.dota2.com/play',
+            'https://login.leagueoflegends.com/',
+            'https://blizzard.com/'
+        )
+    elif age in range(25, 35):
+        arr = (
+            'https://www.instagram.com/',
+            'https://www.facebook.com/',
+            'https://www.reddit.com/',
+            'https://youtube.com/'
+        )
+    else:
+        arr = (
+            'https://www.ria.ru/',
+            'https://tass.com/',
+            'https://www.newsru.com/',
+            'https://www.pfrf.ru/',
+            'https://www.vesti.ru/',
+            'https://live.russia.tv/channel/3?utm_compaign=article',
+            'https://vesti.ua/'
+        )
+
+    sex = random.choice(['male', 'female'])
+    history = {
+        'female': [
+            'тушь для ресниц',
+            'помада для губ',
+            'макияж',
+            'свадебное платье',
+            'летуаль',
+            'рив гош',
+            'prada',
+            'gucci',
+            'versace',
+            'barbie'
+        ],
+        'male': [
+            'порно',
+            'porn',
+            'дота 2',
+            'армия 2020',
+            'призыв 2021',
+            'призывной возраст',
+            'отсрочка от армии',
+            'военный билет'
+        ]
+    }
+    get_request = lambda: random.choice(history[sex])
+    get_seq = lambda x: ''.join([str(random.randint(0, 10)) for _ in range(x)])
+    get_url = lambda request: f'https://yandex.ru/search/?msid={get_seq(10)}.{get_seq(5)}.{get_seq(5)}.{get_seq(6)}&text={request}&suggest_reqid={get_seq(33)}'
+
+    search_history = [get_request() for _ in range(random.randint(0, 3))]
+    search_urls = [get_url(query) for query in search_history]
+
+    direct_urls = [random.choice(arr) for _ in range(random.randint(0, 3))]
+
+    j = direct_urls + search_urls
+    random.shuffle(j)
+    print(f'JUDGES: {j}')
+    return j
+
 
 def main():
 
@@ -47,7 +118,7 @@ def main():
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
 
-        judge = 'https://api.ipify.org?format=json'
+        judges = get_judges()
         proxy = None
         for i in pool:
             p = Producer()
@@ -55,8 +126,18 @@ def main():
             proxy = i.split('//')[-1]
             try:
                 p.create_driver(proxy, headless=True)
-                p.driver.get(judge)
-                break
+                for jj in judges:
+                    try:
+                        p.driver.get(jj)
+                        if p.driver.title:
+                            break  # judge loop
+                    except Exception as e:
+                        if 'ERR_TUNNEL_CONNECTION_FAILED' in str(e):
+                            print(f'ERR_TUNNEL_CONNECTION_FAILED with {proxy}')
+                        else:
+                            print(f'UNKNOWN ERROR {e} with {proxy}')
+
+                break  # proxy loop
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 try:
@@ -65,9 +146,9 @@ def main():
                 except:
                     pass
                 proxy = None
-                continue
+                continue   # proxy loop
         if proxy is None:
-            continue
+            continue   # new proxy pool
 
         time.sleep(1)
         body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
@@ -90,7 +171,7 @@ def main():
                 except:
                     continue
         else:
-            print(f'WRONG JUDGE {judge}')
+            print(f'WRONG JUDGE {jj}')
             try:
                 if p.driver:
                     p.driver.quit()
