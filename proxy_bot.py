@@ -314,7 +314,7 @@ class User(Solver, Producer):
                     retries -= 1
                     continue
                 else:
-                    raise e
+                    break
         return succ
 
 
@@ -330,13 +330,12 @@ if __name__ == '__main__':
     used_queue = []
     # for i in range(bot_number):
     while True:
-
+        success = False
         try:
             proxy = get_proxy_from_geo()
             # proxy = None
             try:
                 u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy, headless=True)  # or proxy=True to take random from tested.txt
-                u.success = False
                 redirected = u.get_redirected_url()
             except Exception as e:
                 print(f'user init failed with {e} on {get_exceptions_args()}')
@@ -344,7 +343,7 @@ if __name__ == '__main__':
 
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy} with [{u.agent}]')
-                u.success = u.visit_target(url=redirected, retries=10)
+                success = u.visit_target(url=redirected, retries=10)
                 try:
                     u.do_job()
                     try:
@@ -389,7 +388,7 @@ if __name__ == '__main__':
             killed = subprocess.getoutput(f'sudo kill -9 {processes}')
             print(f'killed [{killed}] from [{processes}]')
 
-        if not virtual and u.success:
+        if not virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)
