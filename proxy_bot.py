@@ -355,15 +355,15 @@ if __name__ == '__main__':
 
                 except Exception as e:
                     print(f'FAILED JOB [{url_to_visit}] ON [{proxy}]')
-                    if success:
-                        try:
-                            if u.driver:
-                                u.driver.quit()
-                                time.sleep(random.randint(1, 10))
-                        except:
-                            pass
-                    else:
-                        raise e
+                    # if success:
+                    try:
+                        if u.driver:
+                            u.driver.quit()
+                            time.sleep(random.randint(1, 10))
+                    except:
+                        pass
+                    # else:
+                    #     raise e
                 if not virtual:
                     time.sleep(random.randint(1, 10))
 
