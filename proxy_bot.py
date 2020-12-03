@@ -1,7 +1,7 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 
 from solver import Solver
 from cradle import Producer
@@ -287,7 +287,7 @@ class User(Solver, Producer):
 
                             redirected(probability_coeff=10)  # 6%
 
-    def be_human(self, url, retries=10):
+    def visit_target(self, url, retries=10):
 
         def refresh():
             print(f'bad connect to [{self.driver.title}] via {self.proxy}, refreshing...')
@@ -343,7 +343,7 @@ if __name__ == '__main__':
 
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy} with [{u.agent}]')
-                success = u.be_human(url=redirected, retries=10)
+                success = u.visit_target(url=redirected, retries=10)
                 try:
                     u.do_job()
                     try:
@@ -352,9 +352,13 @@ if __name__ == '__main__':
                             time.sleep(random.randint(1, 10))
                     except:
                         pass
+
                 except Exception as e:
                     print(f'FAILED JOB [{url_to_visit}] ON [{proxy}]')
-                    raise e
+                    if success:
+                        break
+                    else:
+                        raise e
                 if not virtual:
                     time.sleep(random.randint(1, 10))
 

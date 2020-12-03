@@ -89,6 +89,7 @@ def get_judges():
 
     j = direct_urls + search_urls
     random.shuffle(j)
+    j.append('https://www.payqrcode.ru')  # to test if it is possible at least to reach it
     print(f'JUDGES: {j}')
     return j
 
@@ -126,18 +127,28 @@ def main():
             proxy = i.split('//')[-1]
             try:
                 p.create_driver(proxy, headless=True)
+                any_of_judges = False
                 for jj in judges:
                     try:
                         p.driver.get(jj)
                         if p.driver.title:
-                            break  # judge loop
+                            any_of_judges = True
+                            print(f'reached judge {jj}')
+                            print(p.driver.title)
+                            # time.sleep(random.randint(1, 10))
+                            continue  # proceed to next judge
                     except Exception as e:
                         if 'ERR_TUNNEL_CONNECTION_FAILED' in str(e):
                             print(f'ERR_TUNNEL_CONNECTION_FAILED with {proxy}')
-                        else:
-                            print(f'UNKNOWN ERROR {e} with {proxy}')
-
-                break  # check proxy from pool in loop
+                            continue  # get new judge
+                        elif 'ERR_PROXY_CONNECTION_FAILED' in str(e):
+                            print(f'ERR_PROXY_CONNECTION_FAILED {e} with {proxy}')
+                            break  # skip all judges, any_of_judges=False
+                if any_of_judges:
+                    break  # exit loop because reached one of judges, return proxy
+                else:
+                    print(f'BAD {proxy}; FOR ALL OF JUDGES')
+                    continue  # get new proxy and judges
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 try:
@@ -146,41 +157,44 @@ def main():
                 except:
                     pass
                 proxy = None
-                continue   # proxy loop
+                continue  # get new proxy
         if proxy is None:
-            continue   # new proxy pool
+            continue  # get new proxy pool
 
-        time.sleep(1)
-        body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
-        if '"ip"' in body.text:
-            p.driver.get('https://www.payqrcode.ru')
-            if p.driver.title == 'Payment QR-code generator':
-                with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+', encoding="utf-8") as file:
-                    file.write(proxy + '\n')
-                try:
-                    if p.driver:
-                        p.driver.quit()
-                except:
-                    pass
-                return proxy
-            else:
-                print(f'WRONG TITLE {p.driver.title}')
-                try:
-                    if p.driver:
-                        p.driver.quit()
-                except:
-                    continue
-        else:
-            print(f'WRONG JUDGE {jj}')
-            try:
-                if p.driver:
-                    p.driver.quit()
-            except:
-                continue
-        # except Exception as e:
-        #     print(f'BAD {proxy}; {e}')
-        #     p.driver.quit()
-        #     continue
+        return proxy
+
+
+
+        # body = WebDriverWait(p.driver, 60).until(EC.presence_of_element_located((By.XPATH, '//body')))
+        # if '"ip"' in body.text:
+        #     p.driver.get('https://www.payqrcode.ru')
+        #     if p.driver.title == 'Payment QR-code generator':
+        #         with open(os.path.join(os.getcwd(), 'tested_proxies.txt'), 'a+', encoding="utf-8") as file:
+        #             file.write(proxy + '\n')
+        #         try:
+        #             if p.driver:
+        #                 p.driver.quit()
+        #         except:
+        #             pass
+        #         return proxy
+        #     else:
+        #         print(f'WRONG TITLE {p.driver.title}')
+        #         try:
+        #             if p.driver:
+        #                 p.driver.quit()
+        #         except:
+        #             continue
+        # else:
+        #     print(f'WRONG JUDGE {jj}')
+        #     try:
+        #         if p.driver:
+        #             p.driver.quit()
+        #     except:
+        #         continue
+        # # except Exception as e:
+        # #     print(f'BAD {proxy}; {e}')
+        # #     p.driver.quit()
+        # #     continue
 
 
 
