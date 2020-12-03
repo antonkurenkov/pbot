@@ -132,7 +132,7 @@ class Producer:
         if random.randint(0, 100) >= 30:
             # random device; mostly pc
             self.agent = self.create_useragent()
-            options.add_argument(f'--user-agent={ua}')
+            options.add_argument(f'--user-agent={self.agent}')
             if random.randint(0, 100) >= 30:
                 options.add_argument('--start-maximized')
             elif random.randint(0, 100) >= 30:
