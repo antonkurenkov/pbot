@@ -195,7 +195,7 @@ class Producer:
             return f'{"".join([random.choice(letters) for _ in range(random.randint(1, 5))])}={"".join([random.choice(nums) for _ in range(random.randint(1, 10))])}'
 
         def letter_postfix():
-            return f'{"".join([random.choice(letters) for _ in range(random.randint(1, 5))])}={"".join([random.choice(arr) for _ in range(random.randint(16, 50))])}'
+            return f'{"".join([random.choice(letters) for _ in range(random.randint(1, 5))])}={"".join([random.choice(arr) for _ in range(random.randint(5, 36))])}'
 
         letters = 'abcdefghijklmnopqrstuvwxyz'
         letters_upper = 'abcdefghijklmnopqrstuvwxyz'.upper()
@@ -207,12 +207,12 @@ class Producer:
 
         data_dict = {
             'social': [
-                f'https://vk.com/away.php?utf={random.randint(1, 6)}&to=https%3A%2F%2Fwww.payqrcode.ru',
-                f'https://vk.com/away.php?utf={random.randint(1, 6)}&to=https%3A%2F%2Fwww.payqrcode.ru',
-                f'https://vk.com/away.php?utf={random.randint(1, 6)}&to=https%3A%2F%2Fwww.payqrcode.ru',
-                f'https://vk.com/away.php?utf={random.randint(1, 6)}&to=https%3A%2F%2Fwww.payqrcode.ru',
-                f'https://vk.com/away.php?utf={random.randint(1, 6)}&to=https%3A%2F%2Fwww.payqrcode.ru',
-                f'https://www.payqrcode.ru/?lr=2&redircnt={"".join([str(random.randint(1, 9)) for _ in range(10)])}.{random.randint(1, 9)}',
+                f'https://vk.com/away.php?utf={random.randint(1, 3)}&to=https%3A%2F%2Fwww.payqrcode.ru',
+                f'https://vk.com/away.php?utf={random.randint(1, 3)}&to=https%3A%2F%2Fwww.payqrcode.ru',
+                f'https://vk.com/away.php?utf={random.randint(1, 3)}&to=https%3A%2F%2Fwww.payqrcode.ru',
+                f'https://vk.com/away.php?utf={random.randint(1, 3)}&to=https%3A%2F%2Fwww.payqrcode.ru',
+                f'https://vk.com/away.php?utf={random.randint(1, 3)}&to=https%3A%2F%2Fwww.payqrcode.ru',
+                f'https://www.payqrcode.ru/?lr={random.randint(1, 4)}&redircnt={"".join([str(random.randint(1, 9)) for _ in range(10)])}.{random.randint(1, 9)}',
                 f'https://www.payqrcode.ru/?fbclid={"".join([random.choice(arr) for _ in range(63)])}',
                 f'https://www.payqrcode.ru/?{fake_args}'
             ],

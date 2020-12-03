@@ -98,9 +98,13 @@ def get_judges():
     search_history = [get_request() for _ in range(random.randint(0, 3))]
     search_urls = [get_url(query.replace(' ', '+')) for query in search_history]
 
-    direct_urls = [random.choice(arr) for _ in range(random.randint(0, 3))]
+    get_link_from_arr = lambda: random.choice(arr)
+    direct_urls = [get_link_from_arr() for _ in range(random.randint(0, 3))]
 
-    j = direct_urls + search_urls
+    true_for_13percent_of_cases = lambda: random.choice([True, False, False, False, False, False, False])
+    cli_link = [f'https://yandex.ru/?&clid={random.randint(1, 9)}{get_seq(random.randint(6, 11))}'] if true_for_13percent_of_cases() else []  # add link to 25% of judges
+
+    j = direct_urls + search_urls + cli_link
     random.shuffle(j)
     j.append('https://www.payqrcode.ru')  # to test if it is possible at least to reach it
     print(f'JUDGES: {j}')
