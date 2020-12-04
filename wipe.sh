@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 while true
 do
     echo ***WIPE DAEMON CLEANS DOCKER
@@ -8,6 +8,8 @@ do
 
     echo ***WIPE DAEMON BUILDS DOCKER
     sudo docker build -t foo0 .
+
+    echo ***WIPE DAEMON RUNS DOCKER
     sudo docker run --rm -t -d foo0
 
 #    sudo docker logs --follow $(sudo docker ps -aq)
