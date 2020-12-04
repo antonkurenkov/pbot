@@ -7,7 +7,7 @@ import base64
 import uuid
 import os
 import sys
-from exceptions import get_exceptions_args
+from utils import get_exceptions_args
 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By

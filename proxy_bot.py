@@ -6,7 +6,7 @@ from selenium.common.exceptions import WebDriverException, TimeoutException
 from solver import Solver
 from cradle import Producer
 from geo import main as get_proxy_from_geo
-from exceptions import get_exceptions_args
+from utils import get_exceptions_args, cleanup
 
 import subprocess
 import random
@@ -300,8 +300,8 @@ class User(Solver, Producer):
                 if not self.virtual:
                     self.driver.get(url)
                 if self.virtual or self.driver.title == 'Payment QR-code generator':
-                    if not self.virtual:
-                        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
+                    # if not self.virtual:
+                    #     WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
                     succ = True
                     break
                 else:
@@ -319,16 +319,16 @@ class User(Solver, Producer):
 
 
 if __name__ == '__main__':
-
+    # limit = 30
     url_to_visit = 'https://www.payqrcode.ru'
     # url_to_visit = 'http://localhost:5000/'
     # url_to_visit = 'http://aqr-coder.herokuapp.com'
+
     users_local = False
     virtual = False
-    bot_number = 76
 
-    used_queue = []
-    # for i in range(bot_number):
+    # round_number = 76
+    # for i in range(round_number):
     while True:
         success = False
         try:
@@ -381,19 +381,29 @@ if __name__ == '__main__':
 
             print(f'Exc = {e}')
         print('---')
-
-        processes = subprocess.getoutput(['pgrep chrome'])
-        if processes:
-            processes = processes.replace('\n', ' ')
-            killed = subprocess.getoutput(f'sudo kill -9 {processes}')
-            print(f'killed [{killed}] from [{processes}]')
+        cleanup()
+        # chrome_windows = subprocess.getoutput(['pgrep chrome'])
+        # if chrome_windows:
+        #     chrome_windows_list = chrome_windows.replace('\n', ' ')
+        #     subprocess.call(f'kill -9 {chrome_windows_list}')
+        #
+        #     sentenced = set(chrome_windows_list.split())
+        #     alive = set(subprocess.getoutput(['pgrep chrome']).split('\n'))
+        #
+        #     print(f'killed [{sentenced - alive}]')
+        #     print(f'survived [{alive}]')
 
         if not virtual and success:
             zzz = random.randint(10, 1800)
             print(f'sleeping {zzz}s')
             time.sleep(zzz)
+            # limit -= 1
+            # if not limit:
+            #     print('LIMIT EXCEEDED, EXITING IMAGE...')
+            #     exit()
         else:
-            print(f'success is {u.success}, retrying')
+            print(f'success is {success}, retrying')
+
 
 
 #  https://aviso.bz/?r=bohdanknyaz

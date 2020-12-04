@@ -1,10 +1,10 @@
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-
-from exceptions import get_exceptions_args
+# from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+#
+from utils import get_exceptions_args, cleanup
 from cradle import Producer
-import time
+# import time
 import os
 import subprocess
 import random
@@ -123,11 +123,7 @@ def main():
             loop.run_until_complete(tasks)
         except RuntimeError:
             print(f'runtime error, exiting')
-            processes = subprocess.getoutput(['pgrep chrome'])
-            if processes:
-                processes = processes.replace('\n', ' ')
-                killed = subprocess.getoutput(f'sudo kill -9 {processes}')
-                print(f'killed [{killed}] from [{processes}]')
+            cleanup()
             exit(1)
         except Exception as e:
             print(f'error in {get_exceptions_args()}, proxy=None')
@@ -151,7 +147,7 @@ def main():
                         if p.driver.title:
                             any_of_judges = True
                             print(f'reached judge {jj}')
-                            print(p.driver.title)
+                            # print(p.driver.title)
                             # time.sleep(random.randint(1, 10))
                             continue  # proceed to next judge
                     except Exception as e:
