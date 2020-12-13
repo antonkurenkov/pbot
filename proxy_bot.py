@@ -168,28 +168,40 @@ class User(Solver, Producer):
         def fake_submit():
             try:
                 buttons = WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, '//button')))
+                    EC.presence_of_all_elements_located((By.XPATH, '//button')))
                 b = random.choice(buttons)
                 time.sleep(random.random())
                 b.click()
                 time.sleep(random.randint(1, 3))
-                self.driver.switch_to.default_content()
+                ads_tab = self.driver.window_handles[-1]
+                self.driver.switch_to.window(ads_tab)
             except:
                 pass
 
         def fake_click():
             try:
                 forms = WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, '//input')))
+                    EC.presence_of_all_elements_located((By.XPATH, '//input')))
                 f = random.choice(forms)
                 time.sleep(random.random())
                 f.submit()
                 time.sleep(random.randint(1, 3))
-                self.driver.switch_to.default_content()
+                ads_tab = self.driver.window_handles[-1]
+                self.driver.switch_to.window(ads_tab)
             except:
                 pass
 
-        func = random.choice([fake_click, fake_submit])
+        def fake_link():
+            links = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, '//a')))
+            l = random.choice(links)
+            time.sleep(random.random())
+            l.click()
+            time.sleep(random.randint(1, 3))
+            ads_tab = self.driver.window_handles[-1]
+            self.driver.switch_to.window(ads_tab)
+
+        func = random.choice([fake_click, fake_submit, fake_link])
         func()
 
     def click_on_adv_banner(self):
@@ -198,19 +210,25 @@ class User(Solver, Producer):
             return
         self.scroll(px=2000, scrollback=False)
         button = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, 'NEON_elmt')))
+            # EC.element_to_be_clickable((By.XPATH, '//div[@style="display: block; text-align: center;"]/p/a')))
+            EC.presence_of_element_located((By.XPATH, '//div[@style="margin:0 auto;"]/p/a')))
         time.sleep(random.random())
         button.click()
-        self.driver.switch_to.default_content()
+        ads_tab = self.driver.window_handles[-1]
+        self.driver.switch_to.window(ads_tab)
+        time.sleep(random.randint(5, 10))
 
     def do_random_stuff(self):
         print('do_random_stuff')
-        for _ in range(random.randint(0, 5)):
+        for _ in range(random.randint(0, 9)):
             try:
-                self.scroll()
-                self.click_random_button()
+                if self.happened(probability_coeff=50):
+                    for __ in range(random.randint(1, 3)):
+                        self.scroll()
+                    self.click_random_button()
+                    time.sleep(random.randint(5, 10))
             except:
-                break
+                continue
 
     def do_job(self):
         """
