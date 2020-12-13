@@ -198,7 +198,7 @@ class User(Solver, Producer):
             return
         self.scroll(px=2000, scrollback=False)
         button = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//footer/div/p/a')))
+            EC.presence_of_element_located((By.ID, 'NEON_elmt')))
         time.sleep(random.random())
         button.click()
         self.driver.switch_to.default_content()
