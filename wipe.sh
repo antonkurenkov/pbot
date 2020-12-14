@@ -10,7 +10,10 @@ do
     sudo docker build -t foo0 .
 
     echo ***WIPE DAEMON RUNS DOCKER
-    sudo docker run --rm -t -d foo0
+    sudo docker run --rm -t -d --name bar00 foo0
+    sudo docker run --rm -t -d --name bar01 foo0
+    sudo docker run --rm -t -d --name bar02 foo0
+#    sudo docker run -rm -it foo0
 
 #    sudo docker logs --follow $(sudo docker ps -aq)
     SLEEP=$((3600 + $RANDOM % 10000))

@@ -337,7 +337,11 @@ class User(Solver, Producer):
 
 
 if __name__ == '__main__':
-    # limit = 30
+
+    sleep_before_start = random.randint(1, 120)
+    print(f"SLEEPING BEFORE START: {sleep_before_start}s")
+    time.sleep(sleep_before_start)
+
     url_to_visit = 'https://www.payqrcode.ru'
     # url_to_visit = 'http://localhost:5000/'
     # url_to_visit = 'http://aqr-coder.herokuapp.com'
