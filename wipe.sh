@@ -2,7 +2,7 @@
 while true
 do
     echo ***WIPE DAEMON CLEANS DOCKER
-    sudo docker rm -f $(sudo docker ps -q)
+    sudo docker rm -f $(sudo docker ps -aq)
     sudo docker rmi -f $(sudo docker images -q)
     sudo docker system prune -a -f
 
