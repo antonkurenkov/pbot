@@ -16,12 +16,11 @@ do
     sudo docker run --rm -t -d --name bar02 foo0
 
     SLEEP=$((1800 + RANDOM % 3600))
-    SLICE=$((SLEEP / 10)):
+    SLICE=$((SLEEP / 10))
 
     for (( i = 0; i <= 10; i++ )); do
 
         echo --- WIPE DAEMON SLEEPS "$SLICE"S ---
-
         sleep "$SLICE"
 
         CONTAINERS=$(sudo docker ps -aq | tr '\n' ' ')
