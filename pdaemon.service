@@ -13,3 +13,4 @@ ExecStop=
 PIDFile=/home/antonkurenkov/pbot/pbot.pid
 RemainAfterExit=true
 Restart=always
+RuntimeMaxSec=10800
