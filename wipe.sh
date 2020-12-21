@@ -14,6 +14,8 @@ do
     sudo docker run --rm -t -d --name bar00 foo0
     sudo docker run --rm -t -d --name bar01 foo0
     sudo docker run --rm -t -d --name bar02 foo0
+    sudo docker run --rm -t -d --name bar03 foo0
+    sudo docker run --rm -t -d --name bar04 foo0
 
     SLEEP=$((1800 + RANDOM % 3600))
     SLICE=$((SLEEP / 10))
