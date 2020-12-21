@@ -261,7 +261,7 @@ class User(Solver, Producer):
             if not self.virtual:
                 time.sleep(random.randint(1, 6))
 
-        if not redirected(probability_coeff=30):  # 16%
+        if not redirected(probability_coeff=50):  # 25%
 
             if self.happened(probability_coeff=500):  # 90%
                 self.find_required_fields_for_input()
