@@ -2,6 +2,7 @@
 # from selenium.webdriver.common.by import By
 # from selenium.webdriver.support.ui import WebDriverWait
 #
+import time
 from utils import get_exceptions_args, cleanup
 from cradle import Producer
 # import time
@@ -11,6 +12,7 @@ import random
 
 import asyncio
 from proxybroker import Broker
+from ProxyRU import ProxyRU
 
 
 async def save(proxies, filename):
@@ -121,6 +123,7 @@ def main():
                                    save(proxies, filename='proxies.txt'))
             loop = asyncio.get_event_loop()
             loop.run_until_complete(tasks)
+            print(f'Proxy pool updated with ALL')
         except RuntimeError:
             print(f'runtime error, exiting')
             cleanup()
@@ -128,6 +131,12 @@ def main():
         except Exception as e:
             print(f'error in {get_exceptions_args()}, proxy=None')
             break
+
+        try:
+            ProxyRU.mix_pool_with_ru()
+            print(f'Proxy pool updated with RU')
+        except Exception as e:
+            print(f'ProxyRU pool update failed with {e}!')
 
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
@@ -146,6 +155,7 @@ def main():
                         p.driver.get(jj)
                         if p.driver.title:
                             any_of_judges = True
+                            time.sleep(random.randint(1, 3))
                             print(f'reached judge {jj}')
                             # print(p.driver.title)
                             # time.sleep(random.randint(1, 10))

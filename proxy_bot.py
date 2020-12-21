@@ -337,17 +337,18 @@ class User(Solver, Producer):
 
 
 if __name__ == '__main__':
-
-    sleep_before_start = random.randint(1, 600)
-    print(f"SLEEPING BEFORE START: {sleep_before_start}s")
-    time.sleep(sleep_before_start)
-
+    #
     url_to_visit = 'https://www.payqrcode.ru'
     # url_to_visit = 'http://localhost:5000/'
     # url_to_visit = 'http://aqr-coder.herokuapp.com'
 
     users_local = False
     virtual = False
+
+    if not virtual:
+        sleep_before_start = random.randint(1, 600)
+        print(f"SLEEPING BEFORE START: {sleep_before_start}s")
+        time.sleep(sleep_before_start)
 
     # round_number = 76
     # for i in range(round_number):
@@ -404,16 +405,6 @@ if __name__ == '__main__':
             print(f'Exc = {e}')
         print('---')
         cleanup()
-        # chrome_windows = subprocess.getoutput(['pgrep chrome'])
-        # if chrome_windows:
-        #     chrome_windows_list = chrome_windows.replace('\n', ' ')
-        #     subprocess.call(f'kill -9 {chrome_windows_list}')
-        #
-        #     sentenced = set(chrome_windows_list.split())
-        #     alive = set(subprocess.getoutput(['pgrep chrome']).split('\n'))
-        #
-        #     print(f'killed [{sentenced - alive}]')
-        #     print(f'survived [{alive}]')
 
         if not virtual and success:
             zzz = random.randint(10, 1800)
