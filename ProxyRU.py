@@ -12,11 +12,16 @@ class ProxyRU:
 
     @staticmethod
     def mix_pool_with_ru():
-        op = Options()
-        op.headless = True
+        options = Options()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-extensions")
+        options.headless = True
         path = ddd.install(browser=ddd.chrome, file_directory='src/lib/', verbose=True, chmod=True, overwrite=False,
                           version=None, filename=None, return_info=False)
-        dr = webdriver.Chrome(executable_path=path, options=op)
+        dr = webdriver.Chrome(executable_path=path, options=options)
 
         # os.remove(os.path.join(os.getcwd(), 'proxies.txt'))
         for i in [
