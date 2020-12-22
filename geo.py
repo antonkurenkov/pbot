@@ -113,30 +113,45 @@ def get_judges():
     return j
 
 
+def get_proxies_from_broker():
+    print(f'Broker fills proxy pool')
+    proxies = asyncio.Queue()
+    broker = Broker(proxies)
+    tasks = asyncio.gather(broker.find(types=['HTTP', 'HTTPS'], limit=10),
+                           save(proxies, filename='proxies.txt'))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(tasks)
+    print(f'Proxy pool filled with Broker')
+
+
+def _get_from_freecz():
+    print(f'Freecz fills proxy pool')
+    ProxyRU.get_proxies_from_free_cz()
+    proxy = ProxyRU.get_proxy()
+    print(f'Proxy pool filled with Freecz')
+    return proxy
+
+
 def main():
 
     while True:
-        try:
-            proxies = asyncio.Queue()
-            broker = Broker(proxies)
-            tasks = asyncio.gather(broker.find(types=['HTTP', 'HTTPS'], limit=10),
-                                   save(proxies, filename='proxies.txt'))
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(tasks)
-            print(f'Proxy pool updated with ALL')
-        except RuntimeError:
-            print(f'runtime error, exiting')
-            cleanup()
-            exit(1)
-        except Exception as e:
-            print(f'error in {get_exceptions_args()}, proxy=None')
-            break
 
-        try:
-            ProxyRU.mix_pool_with_ru()
-            print(f'Proxy pool updated with RU')
-        except Exception as e:
-            print(f'ProxyRU pool update failed with {e}!')
+        seed = 0
+        # seed = random.randint(0, 1)
+        if seed:
+            try:
+                get_proxies_from_broker()
+            except RuntimeError:
+                print(f'runtime error, exiting')
+                cleanup()
+                exit(1)
+            except Exception as e:
+                print(f'error in get_proxies_from_broker {get_exceptions_args()}, proxy=None')
+        else:
+            try:
+                return _get_from_freecz()
+            except Exception as e:
+                print(f'error in get_from_freecz {get_exceptions_args()}, proxy=None')
 
         with open(os.path.join(os.getcwd(), 'proxies.txt'), encoding="utf-8") as file:
             pool = file.read().split()
@@ -158,7 +173,7 @@ def main():
                             time.sleep(random.randint(1, 3))
                             print(f'reached judge {jj}')
                             # print(p.driver.title)
-                            # time.sleep(random.randint(1, 10))
+                            time.sleep(random.randint(1, 5))
                             continue  # proceed to next judge
                     except Exception as e:
                         if 'ERR_TUNNEL_CONNECTION_FAILED' in str(e):
@@ -171,7 +186,7 @@ def main():
                     break  # exit loop because reached one of judges, return proxy
                 else:
                     print(f'BAD {proxy}; FOR ALL OF JUDGES')
-                    continue  # get new proxy and judges
+                    break  # get new proxy and judges
             except Exception as e:
                 print(f'BAD {proxy}; {e}')
                 try:
