@@ -136,7 +136,7 @@ def main():
 
     while True:
 
-        seed = 0
+        seed = 1
         # seed = random.randint(0, 1)
         if seed:
             try:
