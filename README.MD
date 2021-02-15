@@ -1,7 +1,5 @@
 # True AI bot for blowing up website visitor metrics stats. Rebellion comes, you meatfools!
 
-![](.github/.README_images/yandex0.png)
-
 ![](.github/.README_images/google0.png)
 
 Disclaimer: I'm not completely sure if this project does not violate any kind of rules, agreements or etc, and i would be really sorry for that because I did not meant in any way to disrespect anyone or have a wish to make unfair money on this stuff. It is been released just for fun and never been threated seriously. Usage of this shitcode for free or for money is on your own conscience and risk:)
@@ -19,6 +17,8 @@ Inside each image there is a python bot build on Selenium which simulates human 
 There is also some lines to be said about what is the bot "personality" made of: The bot acts with random delays, personal random speed coeff for typing the data, scrolling the screen, and clicking the buttons on a page. The bot vitits the target website using free global proxies which are mined and tested asincronously. The true AI behaviour could be imagined as the tree, where nodes have their weights as coefficients of probability of following to the some next node representing the next action in default standard website visitor scenario. If the enter function "does not happen" on some node, the visitor stops, and the process sleeps for a random time (~1m-1h) thus we add moaar random to the bot. After each sleep session the bot creates new entity with all personality attributes (including also random device size dimentions, random useragent and  ok well enough random other related headers). 
 
 Finally after about a month running this vicious golem on GCP cloud free trial I collected this statistics on Yandex and Google. It was funny (the feeling seems to be like the one you have raising plants on your country land) and i know what is "robocity" (or any kind of eng word for a metric describing real-person-looking-like behaviour), it was the target metric which could in some kind of way describe "efficiency" of all that randomizing. Unfortunately I did not find any relations and correlations between using different behavioral strategies and in/excluding some behavioral parameters. I also have no idea how this metric been calculated by yandex. Probably I didn't have enough resources to process more cases, feed a model with results and reverse-resolve the algorithm and what lies behind this percentage. Anyway, I've just got bored. 
+
+![](.github/.README_images/yandex0.png)
 
 ***
 
