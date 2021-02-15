@@ -1,5 +1,9 @@
 # True AI bot for blowing up website visitor metrics stats. Rebellion comes, you meatfools!
 
+![](.github/.README_images/yandex0.png)
+
+![](.github/.README_images/google0.png)
+
 Disclaimer: I'm not completely sure if this project does not violate any kind of rules, agreements or etc, and i would be really sorry for that because I did not meant in any way to disrespect anyone or have a wish to make unfair money on this stuff. It is been released just for fun and never been threated seriously. Usage of this shitcode for free or for money is on your own conscience and risk:)
 
 This bot works together with my other project https://github.com/antonkurenkov/qr-coder (flask app for generating payment qr-codes on bank account requisites, i ran it for about a month on vps, collecting statistics and now it is archived). 
