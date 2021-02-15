@@ -1,4 +1,5 @@
-# True AI bot for blowing up website visitor metrics stats. Rebellion comes, you meatfools!
+# True AI bot for blowing up website visitor metrics stats. 
+### Rebellion comes, you meatfools!
 
 ![](.github/.README_images/google0.png)
 
