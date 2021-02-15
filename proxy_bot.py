@@ -49,6 +49,7 @@ class User(Solver, Producer):
         return random.randint(0, int(probability_coeff * luck)) >= random.randint(0, 100)
 
     def typewrite(self, string, elem):
+        print(f'typewrite "{string}"')
         seed = self.speed / 10
         if not any(map(str.isalpha, string)):
             seed *= 5
@@ -65,7 +66,7 @@ class User(Solver, Producer):
         if self.virtual:
             return
         order = ('Name', 'PersonalAcc', 'BankName', 'BIC', 'CorrespAcc')
-        fields = WebDriverWait(self.driver, 10).until(EC.presence_of_all_elements_located(
+        fields = WebDriverWait(self.driver, 5).until(EC.presence_of_all_elements_located(
             (By.XPATH, '//div[@class="wrap-input100 validate-input m-b-23"]/input[@class="input100"]')))
         for f, data in zip(fields, order):
             self.scroll(px=random.randint(30, 120), scrollback=False)
@@ -245,7 +246,7 @@ class User(Solver, Producer):
         # 1000 = 95%
         # 10000 = 99%
         """
-        print('do_job on website')
+        print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] Starting Job on website')
 
         def redirected(probability_coeff=250):
             # probability_coeff = 100000  # TODO
@@ -317,22 +318,22 @@ class User(Solver, Producer):
             try:
                 if not self.virtual:
                     self.driver.get(url)
-                if self.virtual or self.driver.title == 'Payment QR-code generator':
-                    # if not self.virtual:
-                    #     WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
-                    succ = True
-                    break
-                else:
-                    refresh()
-                    retries -= 1
-                    continue
+                    raw_html = WebDriverWait(self.driver, 1).until(
+                        EC.presence_of_element_located((By.XPATH, '//body'))).text
+                    if 'Block 1' in raw_html and self.driver.title == 'Payment QR-code generator':
+                        succ = True
+                        break
+                    if 'ERR_EMPTY_RESPONSE' in raw_html:
+                        break
+                    else:
+                        refresh()
+                        retries -= 1
+                        continue
             except WebDriverException as e:
                 if 'ERR_TUNNEL_CONNECTION_FAILED' in str(e):
                     refresh()
                     retries -= 1
-                    continue
-                else:
-                    break
+                continue
         return succ
 
 
@@ -345,10 +346,10 @@ if __name__ == '__main__':
     users_local = False
     virtual = False
 
-    if not virtual:
-        sleep_before_start = random.randint(1, 600)
-        print(f"SLEEPING BEFORE START: {sleep_before_start}s")
-        time.sleep(sleep_before_start)
+    # if not virtual:
+    #     sleep_before_start = random.randint(1, 600)
+    #     print(f"SLEEPING BEFORE START: {sleep_before_start}s")
+    #     time.sleep(sleep_before_start)
 
     # round_number = 76
     # for i in range(round_number):
@@ -358,7 +359,7 @@ if __name__ == '__main__':
             proxy = get_proxy_from_geo()
             # proxy = None
             try:
-                u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy, headless=True)  # or proxy=True to take random from tested.txt
+                u = User(url_to_visit, local=users_local, virtual=virtual, proxy=proxy, headless=False)  # or proxy=True to take random from tested.txt
                 redirected = u.get_redirected_url()
             except Exception as e:
                 print(f'user init failed with {e} on {get_exceptions_args()}')
@@ -366,7 +367,7 @@ if __name__ == '__main__':
 
             try:
                 print(f'[{time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())}] VISIT {redirected} over {proxy} with [{u.agent}]')
-                success = u.visit_target(url=redirected, retries=10)
+                success = u.visit_target(url=redirected)
                 try:
                     u.do_job()
                     try:
